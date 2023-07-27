@@ -1,0 +1,22 @@
+{
+  "name": "rtmp_config",
+  "decode_config" : {
+      "stream": {
+        "uri": "rtsp://admin:KMBWLB@192.168.3.200:554/h264/ch1/main/av_stream"
+      },
+      "video_sink": {
+          "sync": true,
+          "emit-signals" : true,
+          "format": "BGRx"
+      },
+      "audio_sink": {
+        "sync": true,
+        "emit-signals" : true
+      }
+  },
+  "encode_config": {
+    "stream": {
+      "uri": "rtmp://192.168.3.184:1935/live/livestream"
+    }
+  }
+}

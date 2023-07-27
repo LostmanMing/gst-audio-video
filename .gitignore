@@ -67,3 +67,13 @@ yarn-debug.log*
 /storage/*
 !/storage/.keep
 /public/uploads
+
+# Ignore cmake files
+cmake-build-*/
+
+.idea/*
+.idea/deployment.xml
+*.iml
+.idea/modules.xml
+.idea/vcs.xml
+*.xml
