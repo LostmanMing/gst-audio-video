@@ -50,7 +50,7 @@ GstFlowReturn VideoMgr::Excute(GstElement *bin) {
             gst_buffer_unmap(buffer, &info);
         }
     }
-    source = gst_bin_get_by_name(GST_BIN(data->sink), "video_src");
+    source = gst_bin_get_by_name(GST_BIN(sink), "video_src");
     if(source){
         ret = gst_app_src_push_sample(GST_APP_SRC(source), sample);
         gst_object_unref(source);
@@ -62,24 +62,24 @@ GstFlowReturn VideoMgr::Excute(GstElement *bin) {
 }
 
 void VideoMgr::Init() {
-    video_sink = gst_bin_get_by_name(GST_BIN(data->source), "video_sink");
+    video_sink = gst_bin_get_by_name(GST_BIN(src), "video_sink");
     g_signal_connect(video_sink, "new-sample",
                      G_CALLBACK(sourceCallback), this);
     //指定数据类型，宽高不要指定死，能动态设置宽高
     g_object_set(
             G_OBJECT(video_sink),
-            "sync", TRUE,
-            "emit-signals", TRUE,
+            "sync", opts.audio_sink_sync,
+            "emit-signals", opts.video_sink_emit_signals,
             "caps", gst_caps_new_simple("video/x-raw",
                     // "width", G_TYPE_INT, 1920,
                     // "height", G_TYPE_INT, 1080,
                     // "framerate", GST_TYPE_FRACTION, 10, 1,
-                                        "format", G_TYPE_STRING, "BGRx", NULL),
+                                        "format", G_TYPE_STRING, opts.sink_format.c_str(), NULL),
             NULL
     );
     gst_object_unref(video_sink);
 
-    video_src = gst_bin_get_by_name(GST_BIN(data->sink), "video_src");
+    video_src = gst_bin_get_by_name(GST_BIN(sink), "video_src");
     /* 插件的 "format" 属性为 GST_FORMAT_TIME。这意味着 "video_src" 插件将会按照时间来处理数据，而不是按照字节或帧数。
      * 这对于同步视频流是很重要的，因为它允许 GStreamer 根据时间戳来正确地调度视频帧的处理和播放。
      * time-based format

@@ -5,8 +5,6 @@
 #ifndef GST_AUDIO_VIDEO_STREAMMGR_H
 #define GST_AUDIO_VIDEO_STREAMMGR_H
 #include <gst/gst.h>
-#include <gst/app/gstappsrc.h>
-#include <gst/app/gstappsink.h>
 #include <sstream>
 #include <common.h>
 #include <spdlog/spdlog.h>

@@ -57,9 +57,6 @@ gboolean StreamMgr::Init() {
     gst_init(nullptr, nullptr);
     data = g_new0(ProgramData, 1);
     data->loop = g_main_loop_new(nullptr, FALSE);
-    audio = std::make_unique<AudioMgr>(data);
-    video = std::make_unique<VideoMgr>(data);
-
     /* init pipeline */
     if(!buildDecodeStr()){
         spdlog::error("failed to init gstreamer decoder pipeline");
@@ -70,6 +67,9 @@ gboolean StreamMgr::Init() {
         spdlog::error("failed to init gstreamer encoder pipeline");
         return FALSE;
     }
+
+    audio = std::make_unique<AudioMgr>(data,opts);
+    video = std::make_unique<VideoMgr>(data,opts);
 
     /* to be notified of messages from this pipeline, mostly EOS */
     checkBus(data->source);

@@ -9,12 +9,8 @@
 #include "spdlog/spdlog.h"
 #include <cmath>
 #include <functional>
-typedef struct
-{
-    GMainLoop* loop;
-    GstElement* source;
-    GstElement* sink;
-} ProgramData;
+#include "common.h"
+
 
 class SourceMgr{
 private:
@@ -26,11 +22,12 @@ public:
 
     virtual GstFlowReturn Excute(GstElement* bin) = 0;
 
-    ProgramData* data;
+
 protected:
-
-    explicit SourceMgr(ProgramData* data): data(data){}
+    explicit SourceMgr(ProgramData* data,PipelineOptions &opts): src(data->source),sink(data->sink),opts(opts){}
     //    std::function< GstFlowReturn(GstElement* , ProgramData* )> gst_cb;
-
+    PipelineOptions opts;
+    GstElement* src = nullptr;
+    GstElement* sink = nullptr;
 };
 #endif //GST_AUDIO_VIDEO_SOURCE_MANAGE_H

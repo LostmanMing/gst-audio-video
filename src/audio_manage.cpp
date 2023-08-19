@@ -61,7 +61,7 @@ GstFlowReturn AudioMgr::Excute(GstElement *bin) {
 
             // 计算分贝值
             // double db = 20 * std::log10(rms);
-            double db = getPcmDB(info.data,info.size);
+            db = getPcmDB(info.data,info.size);
             // double db = getPcmDB(info.data,info.size);
             spdlog::debug("audio db:{:.2f} size:{}",db,info.size);
             GstCaps* caps = gst_sample_get_caps(sample);
@@ -94,7 +94,7 @@ GstFlowReturn AudioMgr::Excute(GstElement *bin) {
         }
     }
     /* get source an push new sample */
-    source = gst_bin_get_by_name(GST_BIN(data->sink), "audio_src");
+    source = gst_bin_get_by_name(GST_BIN(sink), "audio_src");
     ret = gst_app_src_push_sample(GST_APP_SRC(source), sample);
     gst_object_unref(source);
 
@@ -104,13 +104,13 @@ GstFlowReturn AudioMgr::Excute(GstElement *bin) {
 }
 
 void AudioMgr::Init() {
-    audio_sink = gst_bin_get_by_name(GST_BIN(data->source), "audio_sink");
+    audio_sink = gst_bin_get_by_name(GST_BIN(src), "audio_sink");
     g_signal_connect(audio_sink, "new-sample",
                      G_CALLBACK(sourceCallback), this);
     g_object_set(
             G_OBJECT(audio_sink),
-            "sync", TRUE,
-            "emit-signals", TRUE,
+            "sync", opts.audio_sink_sync,
+            "emit-signals", opts.audio_sink_emit_signals,
             "caps", gst_caps_new_simple("audio/x-raw",
                                         "format", G_TYPE_STRING, "S16LE",
                                         "rate", G_TYPE_INT, 44100,
@@ -120,7 +120,7 @@ void AudioMgr::Init() {
     );
     gst_object_unref(audio_sink);
 
-    audio_src = gst_bin_get_by_name(GST_BIN(data->sink), "audio_src");
+    audio_src = gst_bin_get_by_name(GST_BIN(sink), "audio_src");
     /* configure for time-based format */
     // g_object_set(audio_src, "format", GST_FORMAT_TIME, NULL);
     g_object_set(

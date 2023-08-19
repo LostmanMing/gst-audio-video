@@ -5,12 +5,12 @@
 #ifndef ARCH_STREAMER_VIDEO_MANAGE_H
 #define ARCH_STREAMER_VIDEO_MANAGE_H
 #include<source_manage.h>
-#include<common.h>
+#include "gst_call_back_funcs.h"
 #include <sys/time.h>
 
 class VideoMgr :public SourceMgr{
 public:
-    explicit VideoMgr(ProgramData* data) : SourceMgr(data){}
+    explicit VideoMgr(ProgramData* data,PipelineOptions &opts) : SourceMgr(data,opts){}
 
     void Init() override;
 

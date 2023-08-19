@@ -4,7 +4,7 @@
 
 #ifndef ARCH_STREAMER_COMMON_H
 #define ARCH_STREAMER_COMMON_H
-#include<source_manage.h>
+
 enum class DEVICE_TYPE{
     FILE,RTMP
 };
@@ -27,7 +27,11 @@ public:
     std::string sink_format;
 
 };
-static  GstFlowReturn sourceCallback(GstElement* sink, gpointer data) {
-    return ((SourceMgr*)data)->Excute(sink);
-}
+typedef struct
+{
+    GMainLoop* loop;
+    GstElement* source;
+    GstElement* sink;
+} ProgramData;
+
 #endif //ARCH_STREAMER_COMMON_H
